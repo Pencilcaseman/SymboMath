@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <stdexcept>
 #include <memory>
+#include <cmath>
 
 #ifndef SYMBO_SCALAR
 #	define SYMBO_SCALAR double
@@ -36,8 +37,29 @@ namespace symbo {
 #include "component.hpp"
 #include "number.hpp"
 #include "variable.hpp"
+
 #include "operators/binaryOperator.hpp"
 #include "operators/operatorAdd.hpp"
 #include "operators/operatorSub.hpp"
 #include "operators/operatorMul.hpp"
 #include "operators/operatorDiv.hpp"
+
+#include "operators/unaryOperator.hpp"
+#include "operators/operatorSin.hpp"
+#include "operators/operatorCos.hpp"
+#include "operators/operatorTan.hpp"
+#include "operators/operatorAsin.hpp"
+#include "operators/operatorAcos.hpp"
+#include "operators/operatorAtan.hpp"
+#include "operators/operatorSinh.hpp"
+#include "operators/operatorCosh.hpp"
+#include "operators/operatorTanh.hpp"
+#include "operators/operatorAsinh.hpp"
+#include "operators/operatorAcosh.hpp"
+#include "operators/operatorAtanh.hpp"
+#include "operators/operatorLog.hpp"
+#include "operators/operatorLog2.hpp"
+#include "operators/operatorLog10.hpp"
+#include "operators/operatorExp.hpp"
+#include "operators/operatorPow.hpp"
+#include "operators/operatorSqrt.hpp"

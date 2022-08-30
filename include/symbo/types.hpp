@@ -15,7 +15,6 @@ namespace symbo {
 		OPERATOR_MUL, // Binary Multiplication
 		OPERATOR_DIV, // Binary Division
 
-		OPERATOR_POW,	// Binary Power
 		OPERATOR_SIN,	// Sine
 		OPERATOR_COS,	// Cosine
 		OPERATOR_TAN,	// Tangent
@@ -33,6 +32,9 @@ namespace symbo {
 		OPERATOR_LOG2,	// Log_10
 		OPERATOR_LOG10, // Log_10
 		OPERATOR_EXP,	// e^x
+		OPERATOR_EXP2,	// 2^x
+		OPERATOR_EXP10,	// 10^x
+		OPERATOR_POW,	// Binary Power (x^y)
 		OPERATOR_SQRT	// Square Root
 	};
 

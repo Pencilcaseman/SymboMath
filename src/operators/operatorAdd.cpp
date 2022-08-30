@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_BINOP_IMPL(Add, ADD, +)
+	SYMBO_BINOP_IMPL_O(Add, ADD, +)
 } // namespace symbo

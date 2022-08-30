@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_BINOP_IMPL_O(Sub, SUB, -)
+	SYMBO_BINOP_IMPL_F(Pow, POW, SYMBO_MATH_LIB::pow)
 } // namespace symbo

@@ -19,7 +19,8 @@
 		std::shared_ptr<Component> m_right;                                                        \
 	};
 
-#define SYMBO_BINOP_IMPL(NAME_, CAPS_, OP_)                                                        \
+// Operator call
+#define SYMBO_BINOP_IMPL_O(NAME_, CAPS_, OP_)                                                      \
 	Operator##NAME_::Operator##NAME_() : m_left(nullptr), m_right(nullptr) {}                      \
                                                                                                    \
 	Operator##NAME_::Operator##NAME_(                                                              \
@@ -27,14 +28,41 @@
 			m_left(std::move(left)),                                                               \
 			m_right(std::move(right)) {}                                                           \
                                                                                                    \
-	int64_t Operator##NAME_::depth() const { return SYMBO_MATH_LIB::max(5, 3); }                   \
+	int64_t Operator##NAME_::depth() const {                                                       \
+		return SYMBO_MATH_LIB::max(m_left->depth(), m_right->depth()) + 1;                         \
+	}                                                                                              \
                                                                                                    \
 	Scalar Operator##NAME_::eval() const { return m_left->eval() OP_ m_right->eval(); }            \
                                                                                                    \
 	std::string Operator##NAME_::str(uint64_t indent) const {                                      \
 		std::string left  = m_left->str(indent + 4);                                               \
 		std::string right = m_right->str(indent + 4);                                              \
-		return std::string("[ ") + STRINGIFY(NAME_) " ]\n" + left + "\n" + right;                  \
+		return std::string(indent, ' ') + "[ Function ] " + std::string("[ ") +                    \
+			   STRINGIFY(NAME_) " ]\n" + left + "\n" + right;                                      \
+	}                                                                                              \
+                                                                                                   \
+	Type Operator##NAME_::type() const { return Type::OPERATOR_##CAPS_; }
+
+// Function call
+#define SYMBO_BINOP_IMPL_F(NAME_, CAPS_, OP_)                                                      \
+	Operator##NAME_::Operator##NAME_() : m_left(nullptr), m_right(nullptr) {}                      \
+                                                                                                   \
+	Operator##NAME_::Operator##NAME_(                                                              \
+	  std::shared_ptr<Component> left, std::shared_ptr<Component> right) :                         \
+			m_left(std::move(left)),                                                               \
+			m_right(std::move(right)) {}                                                           \
+                                                                                                   \
+	int64_t Operator##NAME_::depth() const {                                                       \
+		return SYMBO_MATH_LIB::max(m_left->depth(), m_right->depth()) + 1;                         \
+	}                                                                                              \
+                                                                                                   \
+	Scalar Operator##NAME_::eval() const { return OP_(m_left->eval(), m_right->eval()); }          \
+                                                                                                   \
+	std::string Operator##NAME_::str(uint64_t indent) const {                                      \
+		std::string left  = m_left->str(indent + 4);                                               \
+		std::string right = m_right->str(indent + 4);                                              \
+		return std::string(indent, ' ') + "[ Function ] " + std::string("[ ") +                    \
+			   STRINGIFY(NAME_) " ]\n" + left + "\n" + right;                                      \
 	}                                                                                              \
                                                                                                    \
 	Type Operator##NAME_::type() const { return Type::OPERATOR_##CAPS_; }

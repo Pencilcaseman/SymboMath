@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_BINOP_IMPL(Div, DIV, /)
+	SYMBO_BINOP_IMPL_O(Div, DIV, /)
 } // namespace symbo

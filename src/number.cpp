@@ -9,7 +9,9 @@ namespace symbo {
 
 	Scalar Number::eval() const { return m_value; }
 
-	std::string Number::str(uint64_t indent) const { return SYMBO_TO_STRING(m_value); }
+	std::string Number::str(uint64_t indent) const {
+		return std::string(indent, ' ') + "[ Number ] " + SYMBO_TO_STRING(m_value);
+	}
 
 	Type Number::type() const { return Type::NUMBER; }
 } // namespace symbo

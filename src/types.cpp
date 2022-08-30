@@ -14,7 +14,6 @@ namespace symbo {
 			case Type::OPERATOR_SUB: return "OPERATOR_SUB";
 			case Type::OPERATOR_MUL: return "OperatorMul";
 			case Type::OPERATOR_DIV: return "OperatorDiv";
-			case Type::OPERATOR_POW: return "OperatorPow";
 			case Type::OPERATOR_SIN: return "OperatorSin";
 			case Type::OPERATOR_COS: return "OperatorCos";
 			case Type::OPERATOR_TAN: return "OperatorTan";
@@ -31,6 +30,9 @@ namespace symbo {
 			case Type::OPERATOR_LOG2: return "OperatorLog2";
 			case Type::OPERATOR_LOG10: return "OperatorLog10";
 			case Type::OPERATOR_EXP: return "OperatorExp";
+			case Type::OPERATOR_EXP2: return "OperatorExp2";
+			case Type::OPERATOR_EXP10: return "OperatorExp10";
+			case Type::OPERATOR_POW: return "OperatorPow";
 			case Type::OPERATOR_SQRT: return "OperatorSqrt";
 			default: return "Unknown";
 		}
