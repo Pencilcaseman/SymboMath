@@ -8,10 +8,11 @@
 
 // STL includes
 #include <string>
-#include <cstdint>
-#include <stdexcept>
+#include <vector>
 #include <memory>
+#include <cstdint>
 #include <cmath>
+#include <stdexcept>
 
 #ifndef SYMBO_SCALAR
 #	define SYMBO_SCALAR double
@@ -63,3 +64,5 @@ namespace symbo {
 #include "operators/operatorExp.hpp"
 #include "operators/operatorPow.hpp"
 #include "operators/operatorSqrt.hpp"
+
+#include "lexer.hpp"

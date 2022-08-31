@@ -1,0 +1,114 @@
+#include <symbo/symbo.hpp>
+#include <symbo/lexer.hpp>
+
+namespace symbo {
+	// Tokens must be listed from longest to shortest to avoid ambiguity
+	std::vector<Token> tokens = {
+	  {Type::TOKEN_GE, ">="},	  {Type::TOKEN_LE, "<="},		  {Type::TOKEN_EQ, "=="},
+	  {Type::TOKEN_LPAREN, "("},  {Type::TOKEN_RPAREN, ")"},	  {Type::TOKEN_LSQUARE, "["},
+	  {Type::TOKEN_RSQUARE, "]"}, {Type::TOKEN_LCURLY, "{"},	  {Type::TOKEN_RCURLY, "}"},
+	  {Type::TOKEN_COLON, ":"},	  {Type::TOKEN_SEMICOLON, ";"},	  {Type::TOKEN_POINT, "."},
+	  {Type::TOKEN_COMMA, ","},	  {Type::TOKEN_DQUOTE, "\""},	  {Type::TOKEN_SQUOTE, "'"},
+	  {Type::TOKEN_ADD, "+"},	  {Type::TOKEN_SUB, "-"},		  {Type::TOKEN_MUL, "*"},
+	  {Type::TOKEN_DIV, "/"},	  {Type::TOKEN_MOD, "%"},		  {Type::TOKEN_LT, "<"},
+	  {Type::TOKEN_GT, ">"},	  {Type::TOKEN_EXCLAMATION, "!"},
+	};
+
+	Lexer::Lexer() : m_pos(0) {}
+	Lexer::Lexer(std::string str) : m_str(std::move(str)), m_pos(0) {}
+
+	std::string Lexer::str() const { return m_str; }
+	std::vector<Token> Lexer::tokens() const { return m_tokens; }
+
+	void Lexer::clear() {
+		m_tokens.clear();
+		m_pos = 0;
+	}
+
+	void Lexer::advance(int64_t step) { m_pos += step; }
+
+	void Lexer::tokenize() {
+		std::vector<Token> generated;
+		m_pos = 0;
+
+		while (m_pos < static_cast<int64_t>(m_str.length())) { // Loop over all tokens
+			bool foundToken = false;
+
+			for (const auto &tok : ::symbo::tokens) {
+				// Search for a specific token in the string
+				if (m_str.substr(m_pos, tok.value.length()) == tok.value) {
+					generated.emplace_back(Token {tok.type, tok.value});
+					advance(static_cast<int64_t>(tok.value.length()));
+					foundToken = true;
+					break;
+				}
+			}
+
+			if (!foundToken) {
+				// Search for a number or string literal
+				int64_t endNumber, endString;
+				bool number = findNumber(m_pos, endNumber);
+				bool string = findString(m_pos, endString);
+
+				if (number) {
+					generated.emplace_back(
+					  Token {Type::TYPE_NUMBER, m_str.substr(m_pos, endNumber - m_pos)});
+					advance(endNumber - m_pos);
+					foundToken = true;
+				} else if (string) {
+					generated.emplace_back(
+					  Token {Type::TYPE_SYMBOL, m_str.substr(m_pos, endString - m_pos)});
+					advance(endString - m_pos);
+					foundToken = true;
+				}
+			}
+
+			if (!foundToken) {
+				// If no token was found, run some checks
+
+				// If whitespace, ignore
+				if (std::isspace(m_str[m_pos])) {
+					advance();
+				} else {
+					// If not whitespace, throw an error
+					throw std::runtime_error(std::string("Unknown token: ") + m_str[m_pos]);
+				}
+			}
+		}
+
+		m_tokens.clear();
+		m_tokens = generated;
+	}
+
+	bool Lexer::findNumber(int64_t start, int64_t &end) const {
+		int64_t current = start;
+
+		while ((m_str[current] >= '0' && m_str[current] <= '9') || m_str[current] == '.') {
+			current++;
+		}
+
+		if (current > start) {
+			end = current;
+			return true;
+		}
+
+		end = -1;
+		return false;
+	}
+
+	bool Lexer::findString(int64_t start, int64_t &end) const {
+		int64_t current = start;
+
+		while ((m_str[current] >= 'a' && m_str[current] <= 'z') || m_str[current] == '_') {
+			current++;
+		}
+
+		if (current > start) {
+			end = current;
+			return true;
+		}
+
+		end = -1;
+		return false;
+	}
+} // namespace symbo

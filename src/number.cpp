@@ -13,5 +13,5 @@ namespace symbo {
 		return std::string(indent, ' ') + "[ Number ] " + SYMBO_TO_STRING(m_value);
 	}
 
-	Type Number::type() const { return Type::NUMBER; }
+	Type Number::type() const { return Type::TYPE_NUMBER; }
 } // namespace symbo

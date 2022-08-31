@@ -12,5 +12,5 @@ namespace symbo {
 		return std::string(indent, ' ') + "[ Variable ] " + m_name;
 	}
 
-	Type Variable::type() const { return Type::VARIABLE; }
+	Type Variable::type() const { return Type::TYPE_SYMBOL; }
 } // namespace symbo

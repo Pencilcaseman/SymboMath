@@ -16,5 +16,5 @@ namespace symbo {
 		return std::string(indent, ' ') + "[ Component ] " + "UNDEFINED";
 	}
 
-	Type Component::type() const { return Type::COMPONENT; }
+	Type Component::type() const { return Type::TYPE_COMPONENT; }
 } // namespace symbo
