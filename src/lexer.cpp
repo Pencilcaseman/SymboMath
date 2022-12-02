@@ -2,23 +2,40 @@
 #include <symbo/lexer.hpp>
 
 namespace symbo {
-	// Tokens must be listed from longest to shortest to avoid ambiguity
-	std::vector<Token> tokens = {
-	  {Type::TOKEN_GE, ">="},	  {Type::TOKEN_LE, "<="},		  {Type::TOKEN_EQ, "=="},
-	  {Type::TOKEN_LPAREN, "("},  {Type::TOKEN_RPAREN, ")"},	  {Type::TOKEN_LSQUARE, "["},
-	  {Type::TOKEN_RSQUARE, "]"}, {Type::TOKEN_LCURLY, "{"},	  {Type::TOKEN_RCURLY, "}"},
-	  {Type::TOKEN_COLON, ":"},	  {Type::TOKEN_SEMICOLON, ";"},	  {Type::TOKEN_POINT, "."},
-	  {Type::TOKEN_COMMA, ","},	  {Type::TOKEN_DQUOTE, "\""},	  {Type::TOKEN_SQUOTE, "'"},
-	  {Type::TOKEN_ADD, "+"},	  {Type::TOKEN_SUB, "-"},		  {Type::TOKEN_MUL, "*"},
-	  {Type::TOKEN_DIV, "/"},	  {Type::TOKEN_MOD, "%"},		  {Type::TOKEN_LT, "<"},
-	  {Type::TOKEN_GT, ">"},	  {Type::TOKEN_EXCLAMATION, "!"},
-	};
+	namespace detail {
+		// Tokens must be listed from longest to shortest to avoid ambiguity
+		std::vector<Token> tokens = {
+		  {Type::TOKEN_GE, ">="},	  {Type::TOKEN_LE, "<="},		  {Type::TOKEN_EQ, "=="},
+		  {Type::TOKEN_LPAREN, "("},  {Type::TOKEN_RPAREN, ")"},	  {Type::TOKEN_LSQUARE, "["},
+		  {Type::TOKEN_RSQUARE, "]"}, {Type::TOKEN_LCURLY, "{"},	  {Type::TOKEN_RCURLY, "}"},
+		  {Type::TOKEN_COLON, ":"},	  {Type::TOKEN_SEMICOLON, ";"},	  {Type::TOKEN_POINT, "."},
+		  {Type::TOKEN_COMMA, ","},	  {Type::TOKEN_DQUOTE, "\""},	  {Type::TOKEN_SQUOTE, "'"},
+		  {Type::TOKEN_ADD, "+"},	  {Type::TOKEN_SUB, "-"},		  {Type::TOKEN_MUL, "*"},
+		  {Type::TOKEN_DIV, "/"},	  {Type::TOKEN_MOD, "%"},		  {Type::TOKEN_LT, "<"},
+		  {Type::TOKEN_GT, ">"},	  {Type::TOKEN_EXCLAMATION, "!"},
+		};
+
+		// Don't have to be in order, but must be unique
+		std::vector<Token> functionTokens = {
+		  {Type::OPERATOR_SIN, "sin"},	   {Type::OPERATOR_COS, "cos"},
+		  {Type::OPERATOR_TAN, "tan"},	   {Type::OPERATOR_ASIN, "asin"},
+		  {Type::OPERATOR_ACOS, "acos"},   {Type::OPERATOR_ATAN, "atan"},
+		  {Type::OPERATOR_SINH, "sinh"},   {Type::OPERATOR_COSH, "cosh"},
+		  {Type::OPERATOR_TANH, "tanh"},   {Type::OPERATOR_ASINH, "asinh"},
+		  {Type::OPERATOR_ACOSH, "acosh"}, {Type::OPERATOR_ATANH, "atanh"},
+
+		  {Type::OPERATOR_LOG, "log"},	   {Type::OPERATOR_LOG2, "log2"},
+		  {Type::OPERATOR_LOG10, "log10"}, {Type::OPERATOR_EXP, "exp"},
+		  {Type::OPERATOR_EXP2, "exp2"},   {Type::OPERATOR_EXP10, "exp10"},
+		  {Type::OPERATOR_POW, "pow"},	   {Type::OPERATOR_SQRT, "sqrt"},
+		};
+	} // namespace detail
 
 	Lexer::Lexer() : m_pos(0) {}
 	Lexer::Lexer(std::string str) : m_str(std::move(str)), m_pos(0) {}
 
 	std::string Lexer::str() const { return m_str; }
-	std::vector<Token> Lexer::tokens() const { return m_tokens; }
+	std::vector<detail::Token> Lexer::tokens() const { return m_tokens; }
 
 	void Lexer::clear() {
 		m_tokens.clear();
@@ -28,16 +45,16 @@ namespace symbo {
 	void Lexer::advance(int64_t step) { m_pos += step; }
 
 	void Lexer::tokenize() {
-		std::vector<Token> generated;
+		std::vector<detail::Token> generated;
 		m_pos = 0;
 
 		while (m_pos < static_cast<int64_t>(m_str.length())) { // Loop over all tokens
 			bool foundToken = false;
 
-			for (const auto &tok : ::symbo::tokens) {
+			for (const auto &tok : detail::tokens) {
 				// Search for a specific token in the string
 				if (m_str.substr(m_pos, tok.value.length()) == tok.value) {
-					generated.emplace_back(Token {tok.type, tok.value});
+					generated.emplace_back(detail::Token {tok.type, tok.value});
 					advance(static_cast<int64_t>(tok.value.length()));
 					foundToken = true;
 					break;
@@ -52,13 +69,31 @@ namespace symbo {
 
 				if (number) {
 					generated.emplace_back(
-					  Token {Type::TYPE_NUMBER, m_str.substr(m_pos, endNumber - m_pos)});
+					  detail::Token {Type::TYPE_NUMBER, m_str.substr(m_pos, endNumber - m_pos)});
 					advance(endNumber - m_pos);
 					foundToken = true;
 				} else if (string) {
-					generated.emplace_back(
-					  Token {Type::TYPE_SYMBOL, m_str.substr(m_pos, endString - m_pos)});
-					advance(endString - m_pos);
+					std::string value = m_str.substr(m_pos, endString - m_pos);
+
+					// Variables and custom functions are looked up during evaluation
+					// Only built-in functions are looked up during parsing
+
+					// Look up built-in functions
+					bool foundFunction = false;
+					for (const auto &tok : detail::functionTokens) {
+						if (value == tok.value) {
+							generated.emplace_back(detail::Token {tok.type, tok.value});
+							advance(endString - m_pos);
+							foundFunction = true;
+							break;
+						}
+					}
+
+					if (!foundFunction) {
+						generated.emplace_back(detail::Token {Type::TYPE_SYMBOL, value});
+						advance(endString - m_pos);
+					}
+
 					foundToken = true;
 				}
 			}

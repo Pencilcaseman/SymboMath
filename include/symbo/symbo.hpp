@@ -66,3 +66,4 @@ namespace symbo {
 #include "operators/operatorSqrt.hpp"
 
 #include "lexer.hpp"
+#include "parser.hpp"
