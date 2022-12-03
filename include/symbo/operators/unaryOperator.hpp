@@ -8,7 +8,7 @@
                                                                                                    \
 		[[nodiscard]] int64_t depth() const override;                                              \
                                                                                                    \
-		[[nodiscard]] Scalar eval() const override;                                                \
+		[[nodiscard]] Real eval() const override;                                                \
                                                                                                    \
 		[[nodiscard]] std::string str(uint64_t indent) const override;                             \
                                                                                                    \
@@ -25,7 +25,7 @@
                                                                                                    \
 	int64_t Operator##NAME_::depth() const { return m_val->depth() + 1; }                          \
                                                                                                    \
-	Scalar Operator##NAME_::eval() const { return OP_(m_val->eval()); }                            \
+	Real Operator##NAME_::eval() const { return OP_(m_val->eval()); }                            \
                                                                                                    \
 	std::string Operator##NAME_::str(uint64_t indent) const {                                      \
 		std::string val = m_val->str(indent + 4);                                                  \

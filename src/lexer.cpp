@@ -4,7 +4,7 @@
 namespace symbo {
 	namespace detail {
 		// Tokens must be listed from longest to shortest to avoid ambiguity
-		std::vector<Token> tokens = {
+		const std::vector<Token> tokens = {
 		  {Type::TOKEN_GE, ">="},	  {Type::TOKEN_LE, "<="},		  {Type::TOKEN_EQ, "=="},
 		  {Type::TOKEN_LPAREN, "("},  {Type::TOKEN_RPAREN, ")"},	  {Type::TOKEN_LSQUARE, "["},
 		  {Type::TOKEN_RSQUARE, "]"}, {Type::TOKEN_LCURLY, "{"},	  {Type::TOKEN_RCURLY, "}"},
@@ -16,7 +16,7 @@ namespace symbo {
 		};
 
 		// Don't have to be in order, but must be unique
-		std::vector<Token> functionTokens = {
+		const std::vector<Token> functionTokens = {
 		  {Type::OPERATOR_SIN, "sin"},	   {Type::OPERATOR_COS, "cos"},
 		  {Type::OPERATOR_TAN, "tan"},	   {Type::OPERATOR_ASIN, "asin"},
 		  {Type::OPERATOR_ACOS, "acos"},   {Type::OPERATOR_ATAN, "atan"},
@@ -31,13 +31,14 @@ namespace symbo {
 		};
 	} // namespace detail
 
-	Lexer::Lexer() : m_pos(0) {}
-	Lexer::Lexer(std::string str) : m_str(std::move(str)), m_pos(0) {}
+	Lexer::Lexer() = default;
+	Lexer::Lexer(std::string str) : m_str(std::move(str)) {}
 
 	std::string Lexer::str() const { return m_str; }
 	std::vector<detail::Token> Lexer::tokens() const { return m_tokens; }
 
 	void Lexer::clear() {
+		m_str = "";
 		m_tokens.clear();
 		m_pos = 0;
 	}
@@ -63,7 +64,8 @@ namespace symbo {
 
 			if (!foundToken) {
 				// Search for a number or string literal
-				int64_t endNumber, endString;
+				int64_t endNumber;
+				int64_t endString;
 				bool number = findNumber(m_pos, endNumber);
 				bool string = findString(m_pos, endString);
 
@@ -106,7 +108,7 @@ namespace symbo {
 					advance();
 				} else {
 					// If not whitespace, throw an error
-					throw std::runtime_error(std::string("Unknown token: ") + m_str[m_pos]);
+					throw error::TokenError(std::string("Unknown token: ") + m_str[m_pos]);
 				}
 			}
 		}
@@ -118,7 +120,7 @@ namespace symbo {
 	bool Lexer::findNumber(int64_t start, int64_t &end) const {
 		int64_t current = start;
 
-		while ((m_str[current] >= '0' && m_str[current] <= '9') || m_str[current] == '.') {
+		while ((m_str[current] >= '0' && m_str[current] <= '9')) {
 			current++;
 		}
 

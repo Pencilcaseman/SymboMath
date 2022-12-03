@@ -8,8 +8,12 @@ namespace symbo {
 		throw std::invalid_argument("depth() not implemented for type " + typeToString(type()));
 	}
 
-	Scalar Component::eval() const {
+	Real Component::eval() const {
 		throw std::invalid_argument("eval() not implemented for type " + typeToString(type()));
+	}
+
+	Int Component::evalInt() const {
+		throw std::invalid_argument("evalInt() not implemented for type " + typeToString(type()));
 	}
 
 	std::string Component::str(uint64_t indent) const {

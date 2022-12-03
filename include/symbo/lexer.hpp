@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 
 namespace symbo {
@@ -7,8 +9,8 @@ namespace symbo {
 			std::string value;
 		};
 
-		extern std::vector<Token> tokens;
-		extern std::vector<Token> functionTokens;
+		extern const std::vector<Token> tokens;
+		extern const std::vector<Token> functionTokens;
 	} // namespace detail
 
 	class Lexer {
@@ -29,7 +31,7 @@ namespace symbo {
 
 	private:
 		std::string m_str;
-		int64_t m_pos;
+		int64_t m_pos = 0;
 		std::vector<detail::Token> m_tokens;
 	};
 } // namespace symbo

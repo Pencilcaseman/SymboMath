@@ -6,11 +6,9 @@ namespace symbo {
 		Component();
 
 		[[nodiscard]] virtual int64_t depth() const;
-
-		[[nodiscard]] virtual Scalar eval() const;
-
+		[[nodiscard]] virtual Real eval() const;
+		[[nodiscard]] virtual Int evalInt() const;
 		[[nodiscard]] virtual std::string str(uint64_t indent) const;
-
 		[[nodiscard]] virtual Type type() const;
 	};
-}
+} // namespace symbo

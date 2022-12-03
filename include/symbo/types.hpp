@@ -3,7 +3,8 @@
 namespace symbo {
 	enum class Type {
 		TYPE_COMPONENT, // Base class for all types
-		TYPE_NUMBER,	// A scalar
+		TYPE_NUMBER,	// A real value
+		TYPE_INTEGER,	// A signed integer value
 		TYPE_SYMBOL,	// A symbol (variable)
 		TYPE_FUNCTION,	// A user-defined function
 

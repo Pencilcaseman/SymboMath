@@ -13,9 +13,14 @@
 #include <cstdint>
 #include <cmath>
 #include <stdexcept>
+#include <sstream>
 
 #ifndef SYMBO_SCALAR
 #	define SYMBO_SCALAR double
+#endif
+
+#ifndef SYMBO_INTEGER
+#	define SYMBO_INTEGER int64_t
 #endif
 
 #ifndef SYMBO_MATH_LIB
@@ -30,14 +35,17 @@
 #define STR_IMPL_(a) #a
 
 namespace symbo {
-	using Scalar = SYMBO_SCALAR;
-}
+	using Real = SYMBO_SCALAR;
+	using Int  = SYMBO_INTEGER;
+} // namespace symbo
 
 // SymboMath includes
+#include "error.hpp"
 #include "types.hpp"
 #include "component.hpp"
 #include "number.hpp"
 #include "variable.hpp"
+#include "function.hpp"
 
 #include "operators/binaryOperator.hpp"
 #include "operators/operatorAdd.hpp"
