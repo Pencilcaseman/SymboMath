@@ -5,14 +5,14 @@ namespace symbo {
 	namespace detail {
 		// Tokens must be listed from longest to shortest to avoid ambiguity
 		const std::vector<Token> tokens = {
-		  {Type::TOKEN_GE, ">="},	  {Type::TOKEN_LE, "<="},		  {Type::TOKEN_EQ, "=="},
-		  {Type::TOKEN_LPAREN, "("},  {Type::TOKEN_RPAREN, ")"},	  {Type::TOKEN_LSQUARE, "["},
-		  {Type::TOKEN_RSQUARE, "]"}, {Type::TOKEN_LCURLY, "{"},	  {Type::TOKEN_RCURLY, "}"},
-		  {Type::TOKEN_COLON, ":"},	  {Type::TOKEN_SEMICOLON, ";"},	  {Type::TOKEN_POINT, "."},
-		  {Type::TOKEN_COMMA, ","},	  {Type::TOKEN_DQUOTE, "\""},	  {Type::TOKEN_SQUOTE, "'"},
-		  {Type::TOKEN_ADD, "+"},	  {Type::TOKEN_SUB, "-"},		  {Type::TOKEN_MUL, "*"},
-		  {Type::TOKEN_DIV, "/"},	  {Type::TOKEN_MOD, "%"},		  {Type::TOKEN_LT, "<"},
-		  {Type::TOKEN_GT, ">"},	  {Type::TOKEN_EXCLAMATION, "!"},
+		  {Type::TOKEN_GE, ">="},	  {Type::TOKEN_LE, "<="},		{Type::TOKEN_EQ, "=="},
+		  {Type::TOKEN_LPAREN, "("},  {Type::TOKEN_RPAREN, ")"},	{Type::TOKEN_LSQUARE, "["},
+		  {Type::TOKEN_RSQUARE, "]"}, {Type::TOKEN_LCURLY, "{"},	{Type::TOKEN_RCURLY, "}"},
+		  {Type::TOKEN_COLON, ":"},	  {Type::TOKEN_SEMICOLON, ";"}, {Type::TOKEN_POINT, "."},
+		  {Type::TOKEN_COMMA, ","},	  {Type::TOKEN_DQUOTE, "\""},	{Type::TOKEN_SQUOTE, "'"},
+		  {Type::TOKEN_ADD, "+"},	  {Type::TOKEN_SUB, "-"},		{Type::TOKEN_MUL, "*"},
+		  {Type::TOKEN_DIV, "/"},	  {Type::TOKEN_POW, "^"},		{Type::TOKEN_MOD, "%"},
+		  {Type::TOKEN_LT, "<"},	  {Type::TOKEN_GT, ">"},		{Type::TOKEN_EXCLAMATION, "!"},
 		};
 
 		// Don't have to be in order, but must be unique
@@ -32,13 +32,20 @@ namespace symbo {
 	} // namespace detail
 
 	Lexer::Lexer() = default;
+
 	Lexer::Lexer(std::string str) : m_str(std::move(str)) {}
 
 	std::string Lexer::str() const { return m_str; }
+
 	std::vector<detail::Token> Lexer::tokens() const { return m_tokens; }
 
 	void Lexer::clear() {
 		m_str = "";
+		m_tokens.clear();
+		m_pos = 0;
+	}
+
+	void Lexer::reset() {
 		m_tokens.clear();
 		m_pos = 0;
 	}
@@ -120,9 +127,7 @@ namespace symbo {
 	bool Lexer::findNumber(int64_t start, int64_t &end) const {
 		int64_t current = start;
 
-		while ((m_str[current] >= '0' && m_str[current] <= '9')) {
-			current++;
-		}
+		while ((m_str[current] >= '0' && m_str[current] <= '9')) { current++; }
 
 		if (current > start) {
 			end = current;

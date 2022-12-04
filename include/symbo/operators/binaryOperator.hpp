@@ -23,7 +23,7 @@
                                                                                                    \
 	Operator##NAME_::Operator##NAME_(                                                              \
 	  std::shared_ptr<Component> left, std::shared_ptr<Component> right) :                         \
-			Function(left, right) {}                                                                \
+			Function(left, right) {}                                                               \
                                                                                                    \
 	int64_t Operator##NAME_::depth() const {                                                       \
 		return std::max(m_left->depth(), m_right->depth()) + 1;                                    \
@@ -34,6 +34,7 @@
 	Int Operator##NAME_::evalInt() const { return m_left->evalInt() OP_ m_right->evalInt(); }      \
                                                                                                    \
 	std::string Operator##NAME_::str(uint64_t indent) const {                                      \
+		if (indent > SYMBO_MAX_PRINT_DEPTH) return std::string(indent, ' ') + "...";               \
 		std::string left  = m_left->str(indent + 4);                                               \
 		std::string right = m_right->str(indent + 4);                                              \
 		return std::string(indent, ' ') + "[ Function ] " + std::string("[ ") +                    \
@@ -61,6 +62,7 @@
 	}                                                                                              \
                                                                                                    \
 	std::string Operator##NAME_::str(uint64_t indent) const {                                      \
+		if (indent > SYMBO_MAX_PRINT_DEPTH) return std::string(indent, ' ') + "...";               \
 		std::string left  = m_left->str(indent + 4);                                               \
 		std::string right = m_right->str(indent + 4);                                              \
 		return std::string(indent, ' ') + "[ Function ] " + std::string("[ ") +                    \

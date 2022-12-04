@@ -16,17 +16,23 @@ namespace symbo {
 	class Lexer {
 	public:
 		Lexer();
+
 		explicit Lexer(std::string str);
 
 		[[nodiscard]] std::string str() const;
+
 		[[nodiscard]] std::vector<detail::Token> tokens() const;
 
 		void clear();
 
+		void reset();
+
 		void advance(int64_t step = 1);
+
 		void tokenize();
 
 		bool findNumber(int64_t start, int64_t &end) const;
+
 		bool findString(int64_t start, int64_t &end) const;
 
 	private:

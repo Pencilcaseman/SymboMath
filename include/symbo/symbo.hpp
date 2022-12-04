@@ -15,6 +15,10 @@
 #include <stdexcept>
 #include <sstream>
 
+#ifndef SYMBO_MAX_PRINT_DEPTH
+#	define SYMBO_MAX_PRINT_DEPTH 100
+#endif
+
 #ifndef SYMBO_SCALAR
 #	define SYMBO_SCALAR double
 #endif
@@ -54,6 +58,7 @@ namespace symbo {
 #include "operators/operatorDiv.hpp"
 
 #include "operators/unaryOperator.hpp"
+#include "operators/operatorNegate.hpp"
 #include "operators/operatorSin.hpp"
 #include "operators/operatorCos.hpp"
 #include "operators/operatorTan.hpp"

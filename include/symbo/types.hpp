@@ -24,6 +24,7 @@ namespace symbo {
 		TOKEN_SUB,		   // -
 		TOKEN_MUL,		   // *
 		TOKEN_DIV,		   // /
+		TOKEN_POW,		   // ^
 		TOKEN_MOD,		   // %
 		TOKEN_EQ,		   // ==
 		TOKEN_LT,		   // <
@@ -40,18 +41,19 @@ namespace symbo {
 		OPERATOR_MUL, // Binary Multiplication
 		OPERATOR_DIV, // Binary Division
 
-		OPERATOR_SIN,	// Sine
-		OPERATOR_COS,	// Cosine
-		OPERATOR_TAN,	// Tangent
-		OPERATOR_ASIN,	// Arcsine
-		OPERATOR_ACOS,	// Arccosine
-		OPERATOR_ATAN,	// Arctangent
-		OPERATOR_SINH,	// Hyperbolic Sine
-		OPERATOR_COSH,	// Hyperbolic Cosine
-		OPERATOR_TANH,	// Hyperbolic Tangent
-		OPERATOR_ASINH, // Hyperbolic Arcsine
-		OPERATOR_ACOSH, // Hyperbolic Arccosine
-		OPERATOR_ATANH, // Hyperbolic Arctangent
+		OPERATOR_NEGATE, // Negation
+		OPERATOR_SIN,	 // Sine
+		OPERATOR_COS,	 // Cosine
+		OPERATOR_TAN,	 // Tangent
+		OPERATOR_ASIN,	 // Arcsine
+		OPERATOR_ACOS,	 // Arccosine
+		OPERATOR_ATAN,	 // Arctangent
+		OPERATOR_SINH,	 // Hyperbolic Sine
+		OPERATOR_COSH,	 // Hyperbolic Cosine
+		OPERATOR_TANH,	 // Hyperbolic Tangent
+		OPERATOR_ASINH,	 // Hyperbolic Arcsine
+		OPERATOR_ACOSH,	 // Hyperbolic Arccosine
+		OPERATOR_ATANH,	 // Hyperbolic Arctangent
 
 		OPERATOR_LOG,	// Log_e
 		OPERATOR_LOG2,	// Log_10

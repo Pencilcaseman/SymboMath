@@ -38,4 +38,21 @@ namespace symbo::error {
 	private:
 		std::string m_message;
 	};
+
+	class SyntaxError : public std::exception {
+	public:
+		/**
+		 * Construct a new TypeError
+		 * @param message The error message to construct with
+		 */
+		explicit SyntaxError(std::string message);
+
+		/**
+		 * Return the error message as a C string
+		 */
+		[[nodiscard]] const char *what() const noexcept override;
+
+	private:
+		std::string m_message;
+	};
 } // namespace symbo::error
