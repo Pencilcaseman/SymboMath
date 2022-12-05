@@ -10,7 +10,12 @@ namespace symbo {
 
 	std::shared_ptr<Component> Parser::tree() const { return m_tree; }
 
-	void Parser::advance(int64_t dist) { m_pos += dist; }
+	void Parser::advance(int64_t dist) {
+		if (m_pos >= m_lexer.tokens().size()) {
+			throw error::SyntaxError("Parsing could not be completed successfully");
+		}
+		m_pos += dist;
+	}
 
 	void Parser::clear() {
 		m_string = "";
@@ -27,20 +32,15 @@ namespace symbo {
 
 	void Parser::parse() {
 		m_lexer.tokenize();
-		const std::vector<detail::Token> tokens = m_lexer.tokens();
-
-		bool lParen							= false;
-		bool rParen							= false;
-		std::shared_ptr<Function> operation = nullptr;
-		std::shared_ptr<Component> variable = nullptr;
-		std::shared_ptr<Component> number	= nullptr;
 
 		// Eat tokens one-by-one, interpreting their meaning appropriately
-		// while (m_pos < tokens.size()) {
-		//     // Check for numbers, variables and other tokens
-		//     // operation = m_pos > 0 ? eatOperation() : nullptr;
-		//     number = eatNumber(lParen || rParen || operation || m_pos == 0);
-		// }
+		// For now, assume we are parsing a single expression
+		m_tree = eatExpression();
+
+		// Ensure the full list of tokens has been consumed
+		if (!finished()) {
+			throw error::SyntaxError("Parsing could not be completed successfully");
+		}
 	}
 
 	bool Parser::eatPlusMinus() {
@@ -159,15 +159,26 @@ namespace symbo {
 		 * <factor> ::= <number>
 		 * <factor> ::= <variable>
 		 * <factor> ::= <factor> "^" <factor>
-		 * <factor> ::= "(" <factor> ")"
+		 * <factor> ::= "(" <expression> ")"
 		 */
 
 		std::vector<detail::Token> tokens  = m_lexer.tokens();
 		std::shared_ptr<Component> res	   = nullptr;
 		std::shared_ptr<Function> function = nullptr;
 
+		// Check for a number
 		if (auto number = eatNumber(allowPm); number) { res = number; }
-		if (auto variable = eatVariable(allowPm); variable) { res = variable; }
+
+		// Check for a variable if a number was not found
+		if (!res) {
+			if (auto variable = eatVariable(allowPm); variable) { res = variable; }
+		}
+
+		if (!res && !finished() && tokens[m_pos].type == Type::TOKEN_LPAREN) {
+			advance();
+			res = eatExpression();
+			advance();
+		}
 
 		if (!finished() && tokens[m_pos].type == Type::TOKEN_POW) {
 			advance();
@@ -187,6 +198,7 @@ namespace symbo {
 	std::shared_ptr<Component> Parser::eatTerm() {
 		/*
 		 * <term> ::= <factor> [*, /] <factor>
+		 * <term> ::= <factor> <factor> # Implicit multiplication
 		 */
 
 		std::vector<detail::Token> tokens = m_lexer.tokens();
@@ -216,6 +228,23 @@ namespace symbo {
 			function->right() = rhs;
 			node			  = function;
 		}
+
+		std::cout << "Debug Information\n";
+		std::cout << "Current Token: "
+				  << (m_pos < tokens.size() ? typeToString(tokens[m_pos].type) : "FINISHED")
+				  << "\n";
+		std::cout << node->str(0) << "\n\n";
+
+		// size_t prevPos										 = m_pos;
+		// std::shared_ptr<Component> implicitMultiplyComponent = eatTerm();
+		// if (implicitMultiplyComponent) {
+		// 	std::cout << "Component found: " << implicitMultiplyComponent->str(0) << "\n\n";
+		// 	auto multiply = std::make_shared<OperatorMul>(node, implicitMultiplyComponent);
+		// 	return multiply;
+		// } else {
+		// 	std::cout << "No component found\n";
+		// 	m_pos = prevPos;
+		// }
 
 		return node;
 	}

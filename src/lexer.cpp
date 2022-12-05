@@ -59,51 +59,51 @@ namespace symbo {
 		while (m_pos < static_cast<int64_t>(m_str.length())) { // Loop over all tokens
 			bool foundToken = false;
 
-			for (const auto &tok : detail::tokens) {
-				// Search for a specific token in the string
-				if (m_str.substr(m_pos, tok.value.length()) == tok.value) {
-					generated.emplace_back(detail::Token {tok.type, tok.value});
-					advance(static_cast<int64_t>(tok.value.length()));
-					foundToken = true;
-					break;
+			// Search for a number or string literal
+			int64_t endNumber;
+			int64_t endString;
+			bool number = findNumber(m_pos, endNumber);
+			bool string = findString(m_pos, endString);
+
+			if (number) {
+				generated.emplace_back(
+				  detail::Token {Type::TYPE_NUMBER, m_str.substr(m_pos, endNumber - m_pos)});
+				advance(endNumber - m_pos);
+				foundToken = true;
+			} else if (string) {
+				std::string value = m_str.substr(m_pos, endString - m_pos);
+
+				// Variables and custom functions are looked up during evaluation
+				// Only built-in functions are looked up during parsing
+
+				// Look up built-in functions
+				bool foundFunction = false;
+				for (const auto &tok : detail::functionTokens) {
+					if (value == tok.value) {
+						generated.emplace_back(detail::Token {tok.type, tok.value});
+						advance(endString - m_pos);
+						foundFunction = true;
+						break;
+					}
 				}
+
+				if (!foundFunction) {
+					generated.emplace_back(detail::Token {Type::TYPE_SYMBOL, value});
+					advance(endString - m_pos);
+				}
+
+				foundToken = true;
 			}
 
 			if (!foundToken) {
-				// Search for a number or string literal
-				int64_t endNumber;
-				int64_t endString;
-				bool number = findNumber(m_pos, endNumber);
-				bool string = findString(m_pos, endString);
-
-				if (number) {
-					generated.emplace_back(
-					  detail::Token {Type::TYPE_NUMBER, m_str.substr(m_pos, endNumber - m_pos)});
-					advance(endNumber - m_pos);
-					foundToken = true;
-				} else if (string) {
-					std::string value = m_str.substr(m_pos, endString - m_pos);
-
-					// Variables and custom functions are looked up during evaluation
-					// Only built-in functions are looked up during parsing
-
-					// Look up built-in functions
-					bool foundFunction = false;
-					for (const auto &tok : detail::functionTokens) {
-						if (value == tok.value) {
-							generated.emplace_back(detail::Token {tok.type, tok.value});
-							advance(endString - m_pos);
-							foundFunction = true;
-							break;
-						}
+				for (const auto &tok : detail::tokens) {
+					// Search for a specific token in the string
+					if (m_str.substr(m_pos, tok.value.length()) == tok.value) {
+						generated.emplace_back(detail::Token {tok.type, tok.value});
+						advance(static_cast<int64_t>(tok.value.length()));
+						foundToken = true;
+						break;
 					}
-
-					if (!foundFunction) {
-						generated.emplace_back(detail::Token {Type::TYPE_SYMBOL, value});
-						advance(endString - m_pos);
-					}
-
-					foundToken = true;
 				}
 			}
 

@@ -14,6 +14,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <sstream>
+#include <iostream> // TODO: Remove when no longer required
 
 #ifndef SYMBO_MAX_PRINT_DEPTH
 #	define SYMBO_MAX_PRINT_DEPTH 100
