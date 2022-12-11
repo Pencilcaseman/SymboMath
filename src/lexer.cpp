@@ -127,14 +127,15 @@ namespace symbo {
 
 	void Lexer::postProcess() {
 		// Insert implicit multiplication operators
-		// These will be inserted in the following cases:
-		// <number> <Variable>
-		// <number> <Operator>
-		// <number> <Left Parenthesis>
 
 		for (int64_t i = 0; i < m_tokens.size() - 1; ++i) {
-			if (m_tokens[i].type == Type::TYPE_NUMBER &&
-				m_tokens[i + 1].type == Type::TYPE_SYMBOL) {
+			auto a = m_tokens[i].type;
+			auto b = m_tokens[i + 1].type;
+
+			bool numberVariable = a == Type::TYPE_NUMBER && b == Type::TYPE_SYMBOL;
+			bool typeParen = ((static_cast<int32_t>(a) & OPERATOR) == 0) && b == Type::TOKEN_LPAREN;
+
+			if (numberVariable || typeParen) {
 				++i;
 				m_tokens.insert(m_tokens.begin() + i, detail::Token {Type::TOKEN_MUL, "*"});
 			}
