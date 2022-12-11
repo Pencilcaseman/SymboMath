@@ -52,6 +52,7 @@ namespace symbo {
 
 	void Lexer::advance(int64_t step) { m_pos += step; }
 
+	// TODO: Split this into multiple smaller functions to clean up the algorithm
 	void Lexer::tokenize() {
 		std::vector<detail::Token> generated;
 		m_pos = 0;
@@ -122,6 +123,22 @@ namespace symbo {
 
 		m_tokens.clear();
 		m_tokens = generated;
+	}
+
+	void Lexer::postProcess() {
+		// Insert implicit multiplication operators
+		// These will be inserted in the following cases:
+		// <number> <Variable>
+		// <number> <Operator>
+		// <number> <Left Parenthesis>
+
+		for (int64_t i = 0; i < m_tokens.size() - 1; ++i) {
+			if (m_tokens[i].type == Type::TYPE_NUMBER &&
+				m_tokens[i + 1].type == Type::TYPE_SYMBOL) {
+				++i;
+				m_tokens.insert(m_tokens.begin() + i, detail::Token {Type::TOKEN_MUL, "*"});
+			}
+		}
 	}
 
 	bool Lexer::findNumber(int64_t start, int64_t &end) const {
