@@ -32,6 +32,7 @@ namespace symbo {
 
 	void Parser::parse() {
 		m_lexer.tokenize();
+		m_lexer.postProcess();
 
 		// Eat tokens one-by-one, interpreting their meaning appropriately
 		// For now, assume we are parsing a single expression
@@ -198,7 +199,6 @@ namespace symbo {
 	std::shared_ptr<Component> Parser::eatTerm() {
 		/*
 		 * <term> ::= <factor> [*, /] <factor>
-		 * <term> ::= <factor> <factor> # Implicit multiplication
 		 */
 
 		std::vector<detail::Token> tokens = m_lexer.tokens();
@@ -228,23 +228,6 @@ namespace symbo {
 			function->right() = rhs;
 			node			  = function;
 		}
-
-		std::cout << "Debug Information\n";
-		std::cout << "Current Token: "
-				  << (m_pos < tokens.size() ? typeToString(tokens[m_pos].type) : "FINISHED")
-				  << "\n";
-		std::cout << node->str(0) << "\n\n";
-
-		// size_t prevPos										 = m_pos;
-		// std::shared_ptr<Component> implicitMultiplyComponent = eatTerm();
-		// if (implicitMultiplyComponent) {
-		// 	std::cout << "Component found: " << implicitMultiplyComponent->str(0) << "\n\n";
-		// 	auto multiply = std::make_shared<OperatorMul>(node, implicitMultiplyComponent);
-		// 	return multiply;
-		// } else {
-		// 	std::cout << "No component found\n";
-		// 	m_pos = prevPos;
-		// }
 
 		return node;
 	}

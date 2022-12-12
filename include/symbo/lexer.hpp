@@ -31,6 +31,8 @@ namespace symbo {
 
 		void tokenize();
 
+		void postProcess();
+
 		bool findNumber(int64_t start, int64_t &end) const;
 
 		bool findString(int64_t start, int64_t &end) const;
