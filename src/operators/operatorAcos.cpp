@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_UNOP_IMPL(Acos, ACOS, SYMBO_MATH_LIB::acos)
+	SYMBO_UNOP_IMPL_F(Acos, ACOS, SYMBO_MATH_LIB::acos)
 } // namespace symbo

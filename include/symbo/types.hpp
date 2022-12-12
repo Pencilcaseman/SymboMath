@@ -1,9 +1,10 @@
 #pragma once
 
 namespace symbo {
-	constexpr uint32_t TYPE		= 1ull << 7;
-	constexpr uint32_t TOKEN	= 1ull << 6;
-	constexpr uint32_t OPERATOR = 1ull << 5;
+	constexpr int32_t TYPE	   = 1l << 31;
+	constexpr int32_t TOKEN	   = 1l << 30;
+	constexpr int32_t OPERATOR = 1l << 29;
+	constexpr int32_t FUNCTION = 1l << 28;
 
 	enum class Type {
 		TYPE_COMPONENT = TYPE | 0, // Base class for all types
@@ -45,28 +46,28 @@ namespace symbo {
 		OPERATOR_MUL = OPERATOR | 4, // Binary Multiplication
 		OPERATOR_DIV = OPERATOR | 5, // Binary Division
 
-		OPERATOR_NEGATE = OPERATOR | 6,	 // Negation
-		OPERATOR_SIN	= OPERATOR | 7,	 // Sine
-		OPERATOR_COS	= OPERATOR | 8,	 // Cosine
-		OPERATOR_TAN	= OPERATOR | 9,	 // Tangent
-		OPERATOR_ASIN	= OPERATOR | 10, // Arcsine
-		OPERATOR_ACOS	= OPERATOR | 11, // Arccosine
-		OPERATOR_ATAN	= OPERATOR | 12, // Arctangent
-		OPERATOR_SINH	= OPERATOR | 13, // Hyperbolic Sine
-		OPERATOR_COSH	= OPERATOR | 14, // Hyperbolic Cosine
-		OPERATOR_TANH	= OPERATOR | 15, // Hyperbolic Tangent
-		OPERATOR_ASINH	= OPERATOR | 16, // Hyperbolic Arcsine
-		OPERATOR_ACOSH	= OPERATOR | 17, // Hyperbolic Arccosine
-		OPERATOR_ATANH	= OPERATOR | 18, // Hyperbolic Arctangent
+		OPERATOR_NEGATE = FUNCTION | 6,	 // Negation
+		FUNCTION_SIN	= FUNCTION | 7,	 // Sine
+		FUNCTION_COS	= FUNCTION | 8,	 // Cosine
+		FUNCTION_TAN	= FUNCTION | 9,	 // Tangent
+		FUNCTION_ASIN	= FUNCTION | 10, // Arcsine
+		FUNCTION_ACOS	= FUNCTION | 11, // Arccosine
+		FUNCTION_ATAN	= FUNCTION | 12, // Arctangent
+		FUNCTION_SINH	= FUNCTION | 13, // Hyperbolic Sine
+		FUNCTION_COSH	= FUNCTION | 14, // Hyperbolic Cosine
+		FUNCTION_TANH	= FUNCTION | 15, // Hyperbolic Tangent
+		FUNCTION_ASINH	= FUNCTION | 16, // Hyperbolic Arcsine
+		FUNCTION_ACOSH	= FUNCTION | 17, // Hyperbolic Arccosine
+		FUNCTION_ATANH	= FUNCTION | 18, // Hyperbolic Arctangent
 
-		OPERATOR_LOG   = OPERATOR | 19, // Log_e
-		OPERATOR_LOG2  = OPERATOR | 20, // Log_10
-		OPERATOR_LOG10 = OPERATOR | 21, // Log_10
-		OPERATOR_EXP   = OPERATOR | 22, // e^x
-		OPERATOR_EXP2  = OPERATOR | 23, // 2^x
-		OPERATOR_EXP10 = OPERATOR | 24, // 10^x
-		OPERATOR_POW   = OPERATOR | 25, // Binary Power (x^y)
-		OPERATOR_SQRT  = OPERATOR | 26	// Square Root
+		FUNCTION_LOG   = FUNCTION | 19, // Log_e
+		FUNCTION_LOG2  = FUNCTION | 20, // Log_2
+		FUNCTION_LOG10 = FUNCTION | 21, // Log_10
+		FUNCTION_EXP   = FUNCTION | 22, // e^x
+		FUNCTION_EXP2  = FUNCTION | 23, // 2^x
+		FUNCTION_EXP10 = FUNCTION | 24, // 10^x
+		FUNCTION_POW   = FUNCTION | 25, // Binary Power (x^y)
+		FUNCTION_SQRT  = FUNCTION | 26	// Square Root
 	};
 
 	std::string typeToString(const Type &type);

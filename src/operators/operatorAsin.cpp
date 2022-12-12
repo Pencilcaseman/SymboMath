@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_UNOP_IMPL(Asin, ASIN, SYMBO_MATH_LIB::asin)
+	SYMBO_UNOP_IMPL_F(Asin, ASIN, SYMBO_MATH_LIB::asin)
 } // namespace symbo

@@ -37,7 +37,9 @@ namespace symbo {
 
 		[[nodiscard]] std::shared_ptr<Component> eatVariable(bool allowPm);
 
-		[[nodiscard]] std::shared_ptr<Component> eatFactor(bool allowPm);
+		[[nodiscard]] std::shared_ptr<Component> eatFactor();
+
+		[[nodiscard]] std::shared_ptr<Component> eatFunction();
 
 		[[nodiscard]] std::shared_ptr<Component> eatTerm();
 

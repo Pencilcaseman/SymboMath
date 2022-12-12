@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_UNOP_IMPL(Sqrt, SQRT, SYMBO_MATH_LIB::sqrt)
+	SYMBO_UNOP_IMPL_F(Sqrt, SQRT, SYMBO_MATH_LIB::sqrt)
 } // namespace symbo

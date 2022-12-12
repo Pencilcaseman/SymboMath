@@ -40,7 +40,9 @@ namespace symbo {
 
 		// Ensure the full list of tokens has been consumed
 		if (!finished()) {
-			throw error::SyntaxError("Parsing could not be completed successfully");
+			throw error::SyntaxError(
+			  "Parsing could not be completed successfully. Error at token: " +
+			  m_lexer.tokens()[m_pos].value);
 		}
 	}
 
@@ -62,7 +64,7 @@ namespace symbo {
 
 	std::shared_ptr<Component> Parser::eatNumber(bool allowPm = false) {
 		/*
-		 * <integer> ::= <digit>|<integer><digit>
+		 * <integer> ::= <digit> <integer>? <digit>
 		 * <number>  ::= <integer>? "." <integer>?
 		 */
 
@@ -155,12 +157,50 @@ namespace symbo {
 		return variable;
 	}
 
-	std::shared_ptr<Component> Parser::eatFactor(bool allowPm) {
+	std::shared_ptr<Component> Parser::eatFunction() {
+		/*
+		 * <function> ::= <functionName> <factor>
+		 */
+
+		if (std::vector<detail::Token> tokens = m_lexer.tokens();
+			!finished() && static_cast<int32_t>(tokens[m_pos].type) & FUNCTION) {
+			Type functionType = tokens[m_pos].type;
+			advance();
+			auto operand = eatFactor();
+			if (!operand) { return nullptr; }
+
+			switch (functionType) {
+				case Type::FUNCTION_SIN: return std::make_shared<FunctionSin>(operand);
+				case Type::FUNCTION_COS: return std::make_shared<FunctionCos>(operand);
+				case Type::FUNCTION_TAN: return std::make_shared<FunctionTan>(operand);
+				case Type::FUNCTION_ASIN: return std::make_shared<FunctionAsin>(operand);
+				case Type::FUNCTION_ACOS: return std::make_shared<FunctionAcos>(operand);
+				case Type::FUNCTION_ATAN: return std::make_shared<FunctionAtan>(operand);
+				case Type::FUNCTION_SINH: return std::make_shared<FunctionSinh>(operand);
+				case Type::FUNCTION_COSH: return std::make_shared<FunctionCosh>(operand);
+				case Type::FUNCTION_TANH: return std::make_shared<FunctionTanh>(operand);
+				case Type::FUNCTION_ASINH: return std::make_shared<FunctionAsinh>(operand);
+				case Type::FUNCTION_ACOSH: return std::make_shared<FunctionAcosh>(operand);
+				case Type::FUNCTION_ATANH: return std::make_shared<FunctionAtanh>(operand);
+				case Type::FUNCTION_LOG: return std::make_shared<FunctionLog>(operand);
+				case Type::FUNCTION_LOG2: return std::make_shared<FunctionLog2>(operand);
+				case Type::FUNCTION_LOG10: return std::make_shared<FunctionLog10>(operand);
+				case Type::FUNCTION_EXP: return std::make_shared<FunctionExp>(operand);
+				case Type::FUNCTION_SQRT: return std::make_shared<FunctionSqrt>(operand);
+				default: return nullptr;
+			}
+		}
+
+		return nullptr;
+	}
+
+	std::shared_ptr<Component> Parser::eatFactor() {
 		/*
 		 * <factor> ::= <number>
 		 * <factor> ::= <variable>
 		 * <factor> ::= <factor> "^" <factor>
 		 * <factor> ::= "(" <expression> ")"
+		 * <factor> ::= <function> "(" expression ")"
 		 */
 
 		std::vector<detail::Token> tokens  = m_lexer.tokens();
@@ -168,11 +208,16 @@ namespace symbo {
 		std::shared_ptr<Function> function = nullptr;
 
 		// Check for a number
-		if (auto number = eatNumber(allowPm); number) { res = number; }
+		if (auto number = eatNumber(true); number) { res = number; }
 
 		// Check for a variable if a number was not found
 		if (!res) {
-			if (auto variable = eatVariable(allowPm); variable) { res = variable; }
+			if (auto variable = eatVariable(true); variable) { res = variable; }
+		}
+
+		if (!res && static_cast<int32_t>(tokens[m_pos].type) & FUNCTION) {
+			// Eat a function
+			if (auto func = eatFunction(); func) { res = func; }
 		}
 
 		if (!res && !finished() && tokens[m_pos].type == Type::TOKEN_LPAREN) {
@@ -183,12 +228,12 @@ namespace symbo {
 
 		if (!finished() && tokens[m_pos].type == Type::TOKEN_POW) {
 			advance();
-			function = std::make_shared<OperatorPow>();
+			function = std::make_shared<FunctionPow>();
 		}
 
 		if (function && res) {
 			function->left()  = res;
-			function->right() = eatFactor(true);
+			function->right() = eatFactor();
 			if (!function->right()) { throw error::SyntaxError("Syntax Error: Expected a factor"); }
 			res = function;
 		}
@@ -203,7 +248,7 @@ namespace symbo {
 
 		std::vector<detail::Token> tokens = m_lexer.tokens();
 
-		std::shared_ptr<Component> node = eatFactor(true);
+		std::shared_ptr<Component> node = eatFactor();
 
 		if (!node) { return nullptr; }
 
@@ -220,7 +265,7 @@ namespace symbo {
 				throw error::SyntaxError("Invalid Syntax. Expected * or /");
 			}
 
-			std::shared_ptr<Component> rhs = eatFactor(true);
+			std::shared_ptr<Component> rhs = eatFactor();
 
 			if (!rhs) { throw error::SyntaxError("Invalid Syntax. Expected a factor"); }
 

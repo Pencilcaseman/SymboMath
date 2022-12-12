@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_UNOP_IMPL(Cos, COS, SYMBO_MATH_LIB::cos)
+	SYMBO_UNOP_IMPL_F(Cos, COS, SYMBO_MATH_LIB::cos)
 } // namespace symbo

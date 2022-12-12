@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_UNOP_IMPL(Tan, TAN, SYMBO_MATH_LIB::tan)
+	SYMBO_UNOP_IMPL_F(Tan, TAN, SYMBO_MATH_LIB::tan)
 } // namespace symbo

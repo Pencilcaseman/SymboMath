@@ -3,5 +3,5 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_UNOP_IMPL(Negate, NEGATE, -)
+	SYMBO_UNOP_IMPL_O(Negate, NEGATE, -)
 } // namespace symbo
