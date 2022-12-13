@@ -12,6 +12,10 @@ namespace symbo {
 
 	int64_t Integer::evalInt() const { return m_value; }
 
+	std::shared_ptr<Component> Integer::differentiate(const RespectTo &respect) const {
+		return std::make_shared<Integer>(static_cast<Int>(0));
+	}
+
 	std::string Integer::str(uint64_t indent) const {
 		return std::string(indent, ' ') + "[ Integer ] " + SYMBO_TO_STRING(m_value);
 	}
@@ -32,6 +36,10 @@ namespace symbo {
 		}
 
 		throw error::TypeError("Real cannot be used in Integer context");
+	}
+
+	std::shared_ptr<Component> Number::differentiate(const RespectTo &respect) const {
+		return std::make_shared<Number>(0);
 	}
 
 	std::string Number::str(uint64_t indent) const {

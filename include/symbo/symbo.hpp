@@ -47,6 +47,7 @@ namespace symbo {
 // SymboMath includes
 #include "error.hpp"
 #include "types.hpp"
+#include "respectTo.hpp"
 #include "component.hpp"
 #include "number.hpp"
 #include "variable.hpp"

@@ -13,6 +13,8 @@
                                                                                                    \
 		[[nodiscard]] Int evalInt() const override;                                                \
                                                                                                    \
+		[[nodiscard]] std::shared_ptr<Component> differentiate(const RespectTo &respect) const;    \
+                                                                                                   \
 		[[nodiscard]] std::string str(uint64_t indent) const override;                             \
                                                                                                    \
 		[[nodiscard]] Type type() const override;                                                  \
@@ -30,6 +32,8 @@
 		[[nodiscard]] Real eval() const override;                                                  \
                                                                                                    \
 		[[nodiscard]] Int evalInt() const override;                                                \
+                                                                                                   \
+		[[nodiscard]] std::shared_ptr<Component> differentiate(const RespectTo &respect) const;    \
                                                                                                    \
 		[[nodiscard]] std::string str(uint64_t indent) const override;                             \
                                                                                                    \
