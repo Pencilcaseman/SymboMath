@@ -133,8 +133,8 @@ namespace symbo {
 			auto b = m_tokens[i + 1].type;
 
 			bool numberVariable = a == Type::TYPE_NUMBER && b == Type::TYPE_SYMBOL;
-			bool typeParen = ((static_cast<int32_t>(a) & OPERATOR) == 0) && b == Type::TOKEN_LPAREN;
-			bool parenType = a == Type::TOKEN_RPAREN && ((static_cast<int32_t>(b) & OPERATOR) == 0);
+			bool typeParen = ((static_cast<int32_t>(a) & FUNCTION) == 0) && b == Type::TOKEN_LPAREN;
+			bool parenType = a == Type::TOKEN_RPAREN && ((static_cast<int32_t>(b) & FUNCTION) == 0);
 
 			if (numberVariable || typeParen || parenType) {
 				++i;
