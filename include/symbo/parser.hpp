@@ -46,6 +46,8 @@ namespace symbo {
 		[[nodiscard]] std::shared_ptr<Component> eatExpression();
 
 	private:
+		void throwError(const std::string &message) const;
+
 		[[nodiscard]] bool continueTerm() const;
 
 		[[nodiscard]] bool continueExpression() const;

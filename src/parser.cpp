@@ -12,7 +12,7 @@ namespace symbo {
 
 	void Parser::advance(int64_t dist) {
 		if (m_pos >= m_lexer.tokens().size()) {
-			throw error::SyntaxError("Parsing could not be completed successfully");
+			throwError("Parsing could not be completed successfully");
 		}
 		m_pos += dist;
 	}
@@ -34,16 +34,14 @@ namespace symbo {
 		m_lexer.tokenize();
 		m_lexer.postProcess();
 
+		if (finished()) return;
+
 		// Eat tokens one-by-one, interpreting their meaning appropriately
 		// For now, assume we are parsing a single expression
 		m_tree = eatExpression();
 
 		// Ensure the full list of tokens has been consumed
-		if (!finished()) {
-			throw error::SyntaxError(
-			  "Parsing could not be completed successfully. Error at token: " +
-			  m_lexer.tokens()[m_pos].value);
-		}
+		if (!finished()) { throwError("Could not parse expression"); }
 	}
 
 	bool Parser::eatPlusMinus() {
@@ -234,7 +232,7 @@ namespace symbo {
 		if (function && res) {
 			function->left()  = res;
 			function->right() = eatFactor();
-			if (!function->right()) { throw error::SyntaxError("Syntax Error: Expected a factor"); }
+			if (!function->right()) { throwError("Syntax Error: Expected a factor"); }
 			res = function;
 		}
 
@@ -262,12 +260,12 @@ namespace symbo {
 				advance();
 				function = std::make_shared<OperatorDiv>();
 			} else {
-				throw error::SyntaxError("Invalid Syntax. Expected * or /");
+				throwError("Invalid Syntax. Expected * or /");
 			}
 
 			std::shared_ptr<Component> rhs = eatFactor();
 
-			if (!rhs) { throw error::SyntaxError("Invalid Syntax. Expected a factor"); }
+			if (!rhs) { throwError("Invalid Syntax. Expected a factor"); }
 
 			function->left()  = node;
 			function->right() = rhs;
@@ -298,12 +296,12 @@ namespace symbo {
 				advance();
 				function = std::make_shared<OperatorSub>();
 			} else {
-				throw error::SyntaxError("Invalid Syntax. Expected + or ^");
+				throwError("Invalid Syntax. Expected + or ^");
 			}
 
 			std::shared_ptr<Component> rhs = eatTerm();
 
-			if (!rhs) { throw error::SyntaxError("Invalid Syntax. Expected a term"); }
+			if (!rhs) { throwError("Invalid Syntax. Expected a term"); }
 
 			function->left()  = term;
 			function->right() = rhs;
@@ -311,6 +309,12 @@ namespace symbo {
 		}
 
 		return term;
+	}
+
+	void Parser::throwError(const std::string &message) const {
+		int64_t pos = 0;
+		for (size_t i = 0; i < m_pos; ++i) { pos += m_lexer.tokens()[i].value.length(); }
+		throw error::SyntaxError(error::constructErrorMessage(message, m_lexer.str(), pos));
 	}
 
 	bool Parser::continueTerm() const {

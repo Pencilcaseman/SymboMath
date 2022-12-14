@@ -33,6 +33,8 @@
                                                                                                    \
 		[[nodiscard]] Real eval() const override;                                                  \
                                                                                                    \
+		[[nodiscard]] std::shared_ptr<Component> differentiate(const RespectTo &respect) const;    \
+                                                                                                   \
 		[[nodiscard]] std::string str(uint64_t indent) const override;                             \
                                                                                                    \
 		[[nodiscard]] std::shared_ptr<Component> &left();                                          \

@@ -4,4 +4,8 @@
 
 namespace symbo {
 	SYMBO_UNOP_IMPL_F(Sinh, SINH, SYMBO_MATH_LIB::sinh)
+
+	std::shared_ptr<Component> FunctionSinh::differentiate(const RespectTo &respect) const {
+		return nullptr;
+	}
 } // namespace symbo

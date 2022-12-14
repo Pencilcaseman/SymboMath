@@ -55,4 +55,6 @@ namespace symbo::error {
 	private:
 		std::string m_message;
 	};
+
+	std::string constructErrorMessage(const std::string &msg, const std::string &line, int64_t pos);
 } // namespace symbo::error

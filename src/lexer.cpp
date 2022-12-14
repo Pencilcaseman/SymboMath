@@ -54,6 +54,8 @@ namespace symbo {
 
 	// TODO: Split this into multiple smaller functions to clean up the algorithm
 	void Lexer::tokenize() {
+		if (m_pos == m_str.length()) return;
+
 		std::vector<detail::Token> generated;
 		m_pos = 0;
 
@@ -121,8 +123,12 @@ namespace symbo {
 			}
 		}
 
+		m_str = std::string();
+		for (const auto &tok : generated) { m_str += tok.value; }
+
 		m_tokens.clear();
 		m_tokens = generated;
+		// m_pos = m_str.length();
 	}
 
 	void Lexer::postProcess() {
@@ -134,7 +140,8 @@ namespace symbo {
 
 			bool numberVariable = a == Type::TYPE_NUMBER && b == Type::TYPE_SYMBOL;
 			bool typeParen = ((static_cast<int32_t>(a) & FUNCTION) == 0) && b == Type::TOKEN_LPAREN;
-			bool parenType = a == Type::TOKEN_RPAREN && ((static_cast<int32_t>(b) & FUNCTION) == 0);
+			bool parenType = a == Type::TOKEN_RPAREN &&
+							 ((static_cast<int32_t>(b) & FUNCTION) == 0) && b != Type::TOKEN_RPAREN;
 
 			if (numberVariable || typeParen || parenType) {
 				++i;
