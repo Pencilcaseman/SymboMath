@@ -6,6 +6,6 @@ namespace symbo {
 	SYMBO_BINOP_IMPL_F(Pow, POW, SYMBO_MATH_LIB::pow)
 
 	std::shared_ptr<Component> FunctionPow::differentiate(const RespectTo &respect) const {
-		return nullptr;
+		throw error::DerivativeError("Pow cannot currently be differentiated");
 	}
 } // namespace symbo

@@ -128,7 +128,6 @@ namespace symbo {
 
 		m_tokens.clear();
 		m_tokens = generated;
-		// m_pos = m_str.length();
 	}
 
 	void Lexer::postProcess() {
@@ -139,11 +138,13 @@ namespace symbo {
 			auto b = m_tokens[i + 1].type;
 
 			bool numberVariable = a == Type::TYPE_NUMBER && b == Type::TYPE_SYMBOL;
-			bool typeParen = ((static_cast<int32_t>(a) & FUNCTION) == 0) && b == Type::TOKEN_LPAREN;
-			bool parenType = a == Type::TOKEN_RPAREN &&
-							 ((static_cast<int32_t>(b) & FUNCTION) == 0) && b != Type::TOKEN_RPAREN;
+			bool typeParen		= (static_cast<int32_t>(a) & TYPE) && b == Type::TOKEN_LPAREN;
+			bool parenType =
+			  a == Type::TOKEN_RPAREN && ((static_cast<int32_t>(b) & FUNCTION) == 0) &&
+			  ((static_cast<int32_t>(b) & FUNCTION) || (static_cast<int32_t>(b) & TYPE));
+			bool parenParen = (a == Type::TOKEN_RPAREN) && (b == Type::TOKEN_LPAREN);
 
-			if (numberVariable || typeParen || parenType) {
+			if (numberVariable || typeParen || parenType || parenParen) {
 				++i;
 				m_tokens.insert(m_tokens.begin() + i, detail::Token {Type::TOKEN_MUL, "*"});
 			}

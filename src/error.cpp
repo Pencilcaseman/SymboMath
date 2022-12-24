@@ -11,6 +11,9 @@ namespace symbo::error {
 	SyntaxError::SyntaxError(std::string message) : m_message(std::move(message)) {}
 	[[nodiscard]] const char *SyntaxError::what() const noexcept { return m_message.c_str(); }
 
+	DerivativeError::DerivativeError(std::string message) : m_message(std::move(message)) {}
+	[[nodiscard]] const char *DerivativeError::what() const noexcept { return m_message.c_str(); }
+
 	std::string constructErrorMessage(const std::string &msg, const std::string &line,
 									  int64_t pos) {
 		return msg + "\nError occurred here: " + line + "\n" + std::string(21 + pos, '~') + "^";

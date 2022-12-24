@@ -6,6 +6,6 @@ namespace symbo {
 	SYMBO_UNOP_IMPL_F(Cosh, COSH, SYMBO_MATH_LIB::cosh)
 
 	std::shared_ptr<Component> FunctionCosh::differentiate(const RespectTo &respect) const {
-		return nullptr;
+		throw error::DerivativeError("Cosh cannot currently be differentiated");
 	}
 } // namespace symbo
