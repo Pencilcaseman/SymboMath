@@ -8,6 +8,9 @@ namespace symbo {
 
 		[[nodiscard]] int64_t depth() const override;
 
+		[[nodiscard]] std::shared_ptr<Component>
+		differentiate(const RespectTo &respect) const override;
+
 		[[nodiscard]] std::string str(uint64_t indent) const override;
 
 		[[nodiscard]] Type type() const override;

@@ -3,5 +3,9 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_UNOP_IMPL(Acos, ACOS, SYMBO_MATH_LIB::acos)
+	SYMBO_UNOP_IMPL_F(Acos, ACOS, SYMBO_MATH_LIB::acos)
+
+	std::shared_ptr<Component> FunctionAcos::differentiate(const RespectTo &respect) const {
+		throw error::DerivativeError("Acos cannot currently be differentiated");
+	}
 } // namespace symbo

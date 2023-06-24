@@ -16,6 +16,11 @@ namespace symbo {
 		throw std::invalid_argument("evalInt() not implemented for type " + typeToString(type()));
 	}
 
+	std::shared_ptr<Component> Component::differentiate(const RespectTo &respect) const {
+		throw std::invalid_argument("differentiate() not implemented for type " +
+									typeToString(type()));
+	}
+
 	std::string Component::str(uint64_t indent) const {
 		return std::string(indent, ' ') + "[ Component ] " + "UNDEFINED";
 	}

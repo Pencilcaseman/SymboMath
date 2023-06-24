@@ -37,13 +37,17 @@ namespace symbo {
 
 		[[nodiscard]] std::shared_ptr<Component> eatVariable(bool allowPm);
 
-		[[nodiscard]] std::shared_ptr<Component> eatFactor(bool allowPm);
+		[[nodiscard]] std::shared_ptr<Component> eatFactor();
+
+		[[nodiscard]] std::shared_ptr<Component> eatFunction();
 
 		[[nodiscard]] std::shared_ptr<Component> eatTerm();
 
 		[[nodiscard]] std::shared_ptr<Component> eatExpression();
 
 	private:
+		void throwError(const std::string &message) const;
+
 		[[nodiscard]] bool continueTerm() const;
 
 		[[nodiscard]] bool continueExpression() const;

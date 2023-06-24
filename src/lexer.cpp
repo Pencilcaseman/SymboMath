@@ -17,17 +17,17 @@ namespace symbo {
 
 		// Don't have to be in order, but must be unique
 		const std::vector<Token> functionTokens = {
-		  {Type::OPERATOR_SIN, "sin"},	   {Type::OPERATOR_COS, "cos"},
-		  {Type::OPERATOR_TAN, "tan"},	   {Type::OPERATOR_ASIN, "asin"},
-		  {Type::OPERATOR_ACOS, "acos"},   {Type::OPERATOR_ATAN, "atan"},
-		  {Type::OPERATOR_SINH, "sinh"},   {Type::OPERATOR_COSH, "cosh"},
-		  {Type::OPERATOR_TANH, "tanh"},   {Type::OPERATOR_ASINH, "asinh"},
-		  {Type::OPERATOR_ACOSH, "acosh"}, {Type::OPERATOR_ATANH, "atanh"},
+		  {Type::FUNCTION_SIN, "sin"},	   {Type::FUNCTION_COS, "cos"},
+		  {Type::FUNCTION_TAN, "tan"},	   {Type::FUNCTION_ASIN, "asin"},
+		  {Type::FUNCTION_ACOS, "acos"},   {Type::FUNCTION_ATAN, "atan"},
+		  {Type::FUNCTION_SINH, "sinh"},   {Type::FUNCTION_COSH, "cosh"},
+		  {Type::FUNCTION_TANH, "tanh"},   {Type::FUNCTION_ASINH, "asinh"},
+		  {Type::FUNCTION_ACOSH, "acosh"}, {Type::FUNCTION_ATANH, "atanh"},
 
-		  {Type::OPERATOR_LOG, "log"},	   {Type::OPERATOR_LOG2, "log2"},
-		  {Type::OPERATOR_LOG10, "log10"}, {Type::OPERATOR_EXP, "exp"},
-		  {Type::OPERATOR_EXP2, "exp2"},   {Type::OPERATOR_EXP10, "exp10"},
-		  {Type::OPERATOR_POW, "pow"},	   {Type::OPERATOR_SQRT, "sqrt"},
+		  {Type::FUNCTION_LOG, "log"},	   {Type::FUNCTION_LOG2, "log2"},
+		  {Type::FUNCTION_LOG10, "log10"}, {Type::FUNCTION_EXP, "exp"},
+		  {Type::FUNCTION_EXP2, "exp2"},   {Type::FUNCTION_EXP10, "exp10"},
+		  {Type::FUNCTION_POW, "pow"},	   {Type::FUNCTION_SQRT, "sqrt"},
 		};
 	} // namespace detail
 
@@ -54,6 +54,8 @@ namespace symbo {
 
 	// TODO: Split this into multiple smaller functions to clean up the algorithm
 	void Lexer::tokenize() {
+		if (m_pos == m_str.length()) return;
+
 		std::vector<detail::Token> generated;
 		m_pos = 0;
 
@@ -121,6 +123,9 @@ namespace symbo {
 			}
 		}
 
+		m_str = std::string();
+		for (const auto &tok : generated) { m_str += tok.value; }
+
 		m_tokens.clear();
 		m_tokens = generated;
 	}
@@ -128,14 +133,18 @@ namespace symbo {
 	void Lexer::postProcess() {
 		// Insert implicit multiplication operators
 
-		for (int64_t i = 0; i < m_tokens.size() - 1; ++i) {
+		for (size_t i = 0; i < m_tokens.size() - 1; ++i) {
 			auto a = m_tokens[i].type;
 			auto b = m_tokens[i + 1].type;
 
 			bool numberVariable = a == Type::TYPE_NUMBER && b == Type::TYPE_SYMBOL;
-			bool typeParen = ((static_cast<int32_t>(a) & OPERATOR) == 0) && b == Type::TOKEN_LPAREN;
+			bool typeParen		= (static_cast<int32_t>(a) & TYPE) && b == Type::TOKEN_LPAREN;
+			bool parenType =
+			  a == Type::TOKEN_RPAREN && ((static_cast<int32_t>(b) & FUNCTION) == 0) &&
+			  ((static_cast<int32_t>(b) & FUNCTION) || (static_cast<int32_t>(b) & TYPE));
+			bool parenParen = (a == Type::TOKEN_RPAREN) && (b == Type::TOKEN_LPAREN);
 
-			if (numberVariable || typeParen) {
+			if (numberVariable || typeParen || parenType || parenParen) {
 				++i;
 				m_tokens.insert(m_tokens.begin() + i, detail::Token {Type::TOKEN_MUL, "*"});
 			}
@@ -145,7 +154,7 @@ namespace symbo {
 	bool Lexer::findNumber(int64_t start, int64_t &end) const {
 		int64_t current = start;
 
-		while ((m_str[current] >= '0' && m_str[current] <= '9')) { current++; }
+		while (m_str[current] >= '0' && m_str[current] <= '9') { current++; }
 
 		if (current > start) {
 			end = current;

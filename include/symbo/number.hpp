@@ -13,6 +13,9 @@ namespace symbo {
 
 		[[nodiscard]] Int evalInt() const override;
 
+		[[nodiscard]] std::shared_ptr<Component>
+		differentiate(const RespectTo &respect) const override;
+
 		[[nodiscard]] std::string str(uint64_t indent) const override;
 
 		[[nodiscard]] Type type() const override;
@@ -31,6 +34,9 @@ namespace symbo {
 		[[nodiscard]] Real eval() const override;
 
 		[[nodiscard]] Int evalInt() const override;
+
+		[[nodiscard]] std::shared_ptr<Component>
+		differentiate(const RespectTo &respect) const override;
 
 		[[nodiscard]] std::string str(uint64_t indent) const override;
 

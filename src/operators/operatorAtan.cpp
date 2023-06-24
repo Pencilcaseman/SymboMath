@@ -3,5 +3,9 @@
 #include <utility>
 
 namespace symbo {
-	SYMBO_UNOP_IMPL(Atan, ATAN, SYMBO_MATH_LIB::atan)
+	SYMBO_UNOP_IMPL_F(Atan, ATAN, SYMBO_MATH_LIB::atan)
+
+	std::shared_ptr<Component> FunctionAtan::differentiate(const RespectTo &respect) const {
+		throw error::DerivativeError("Atan cannot currently be differentiated");
+	}
 } // namespace symbo

@@ -35,30 +35,32 @@ namespace symbo {
 
 			case Type::OPERATOR_PLUS: return "OperatorPlus";
 			case Type::OPERATOR_MINUS: return "OperatorMinus";
+
 			case Type::OPERATOR_ADD: return "OperatorAdd";
 			case Type::OPERATOR_SUB: return "OPERATOR_SUB";
 			case Type::OPERATOR_MUL: return "OperatorMul";
 			case Type::OPERATOR_DIV: return "OperatorDiv";
-			case Type::OPERATOR_SIN: return "OperatorSin";
-			case Type::OPERATOR_COS: return "OperatorCos";
-			case Type::OPERATOR_TAN: return "OperatorTan";
-			case Type::OPERATOR_ASIN: return "OperatorAsin";
-			case Type::OPERATOR_ACOS: return "OperatorAcos";
-			case Type::OPERATOR_ATAN: return "OperatorAtan";
-			case Type::OPERATOR_SINH: return "OperatorSinh";
-			case Type::OPERATOR_COSH: return "OperatorCosh";
-			case Type::OPERATOR_TANH: return "OperatorTanh";
-			case Type::OPERATOR_ASINH: return "OperatorAsinh";
-			case Type::OPERATOR_ACOSH: return "OperatorAcosh";
-			case Type::OPERATOR_ATANH: return "OperatorAtanh";
-			case Type::OPERATOR_LOG: return "OperatorLog";
-			case Type::OPERATOR_LOG2: return "OperatorLog2";
-			case Type::OPERATOR_LOG10: return "OperatorLog10";
-			case Type::OPERATOR_EXP: return "OperatorExp";
-			case Type::OPERATOR_EXP2: return "OperatorExp2";
-			case Type::OPERATOR_EXP10: return "OperatorExp10";
-			case Type::OPERATOR_POW: return "OperatorPow";
-			case Type::OPERATOR_SQRT: return "OperatorSqrt";
+
+			case Type::FUNCTION_SIN: return "FunctionSin";
+			case Type::FUNCTION_COS: return "FunctionCos";
+			case Type::FUNCTION_TAN: return "FunctionTan";
+			case Type::FUNCTION_ASIN: return "FunctionAsin";
+			case Type::FUNCTION_ACOS: return "FunctionAcos";
+			case Type::FUNCTION_ATAN: return "FunctionAtan";
+			case Type::FUNCTION_SINH: return "FunctionSinh";
+			case Type::FUNCTION_COSH: return "FunctionCosh";
+			case Type::FUNCTION_TANH: return "FunctionTanh";
+			case Type::FUNCTION_ASINH: return "FunctionAsinh";
+			case Type::FUNCTION_ACOSH: return "FunctionAcosh";
+			case Type::FUNCTION_ATANH: return "FunctionAtanh";
+			case Type::FUNCTION_LOG: return "FunctionLog";
+			case Type::FUNCTION_LOG2: return "FunctionLog2";
+			case Type::FUNCTION_LOG10: return "FunctionLog10";
+			case Type::FUNCTION_EXP: return "FunctionExp";
+			case Type::FUNCTION_EXP2: return "FunctionExp2";
+			case Type::FUNCTION_EXP10: return "FunctionExp10";
+			case Type::FUNCTION_POW: return "FunctionPow";
+			case Type::FUNCTION_SQRT: return "FunctionSqrt";
 			default: return "Unknown";
 		}
 	}
